@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-FROM alpine
+FROM build-harbor.alauda.cn/ops/alpine:3.20
 
 LABEL name="Nexus Repository Manager" \
       maintainer="Sonatype <support@sonatype.com>" \
@@ -37,7 +37,7 @@ LABEL name="Nexus Repository Manager" \
       io.openshift.tags="Sonatype,Nexus,Repository Manager"
 
 ARG NEXUS_VERSION=3.76.0-03
-ARG NEXUS_DOWNLOAD_URL=https://download.sonatype.com/nexus/3/nexus-${NEXUS_VERSION}-unix.tar.gz
+ARG NEXUS_DOWNLOAD_URL=https://build-nexus.alauda.cn/repository/alauda/files/nexus-${NEXUS_VERSION}-unix.tar.gz
 ARG NEXUS_DOWNLOAD_SHA256_HASH=d336a1c1fa3c26ee977ef720707d7bbca660aee5bf7369a9037293910c63c672
 
 # configure nexus runtime
@@ -60,11 +60,11 @@ RUN apk update && apk add --no-cache openssl
 WORKDIR ${SONATYPE_DIR}
 
 # Download nexus & setup directories
-RUN curl -L ${NEXUS_DOWNLOAD_URL} --output nexus-${NEXUS_VERSION}-${JAVA_VERSION}-unix.tar.gz \
-    && echo "${NEXUS_DOWNLOAD_SHA256_HASH} nexus-${NEXUS_VERSION}-${JAVA_VERSION}-unix.tar.gz" > nexus-${NEXUS_VERSION}-${JAVA_VERSION}-unix.tar.gz.sha256 \
-    && sha256sum -c nexus-${NEXUS_VERSION}-${JAVA_VERSION}-unix.tar.gz.sha256 \
-    && tar xvf nexus-${NEXUS_VERSION}-${JAVA_VERSION}-unix.tar.gz \
-    && rm -f nexus-${NEXUS_VERSION}-${JAVA_VERSION}-unix.tar.gz nexus-${NEXUS_VERSION}-${JAVA_VERSION}-unix.tar.gz.sha256 \
+RUN curl -L ${NEXUS_DOWNLOAD_URL} --output nexus-${NEXUS_VERSION}-unix.tar.gz \
+    && echo "${NEXUS_DOWNLOAD_SHA256_HASH} nexus-${NEXUS_VERSION}-unix.tar.gz" > nexus-${NEXUS_VERSION}-unix.tar.gz.sha256 \
+    && sha256sum -c nexus-${NEXUS_VERSION}-unix.tar.gz.sha256 \
+    && tar xvf nexus-${NEXUS_VERSION}-unix.tar.gz \
+    && rm -f nexus-${NEXUS_VERSION}-unix.tar.gz nexus-${NEXUS_VERSION}-unix.tar.gz.sha256 \
     && mv nexus-${NEXUS_VERSION} $NEXUS_HOME \
     && chown -R nexus:nexus ${SONATYPE_WORK} \
     && mv ${SONATYPE_WORK}/nexus3 ${NEXUS_DATA} \
@@ -88,4 +88,6 @@ USER nexus
 
 ENV INSTALL4J_ADD_VM_PARAMS="-Xms2703m -Xmx2703m -XX:MaxDirectMemorySize=2703m -Djava.util.prefs.userRoot=${NEXUS_DATA}/javaprefs"
 
-CMD ["/opt/sonatype/nexus/bin/nexus", "run"]
+ENTRYPOINT ["/opt/sonatype/nexus/bin/nexus"]
+
+CMD ["run"]
