@@ -73,6 +73,14 @@ RUN curl -L ${NEXUS_DOWNLOAD_URL} --output nexus-${NEXUS_VERSION}-unix.tar.gz \
 # Removing java memory settings from nexus.vmoptions since now we use INSTALL4J_ADD_VM_PARAMS
 RUN sed -i '/^-Xms/d;/^-Xmx/d;/^-XX:MaxDirectMemorySize/d' $NEXUS_HOME/bin/nexus.vmoptions
 
+COPY scripts ${NEXUS_HOME}/scripts
+
+RUN $NEXUS_HOME/scripts/replace.sh $NEXUS_HOME org/cyclonedx/cyclonedx-core-java 7.3.2 9.0.4 \
+  && $NEXUS_HOME/scripts/replace.sh $NEXUS_HOME org/keycloak/keycloak-saml-core 18.0.2 22.0.13 \
+  && $NEXUS_HOME/scripts/replace.sh $NEXUS_HOME org/apache/velocity/velocity-engine-core 2.3 2.4.1 \
+  && $NEXUS_HOME/scripts/replace.sh $NEXUS_HOME org/ops4j/pax/url/pax-url-aether 2.6.12 2.6.16 \
+  && $NEXUS_HOME/scripts/replace.sh $NEXUS_HOME org/apache/commons/commons-lang3 3.13.0 3.17.0
+
 RUN echo "#!/bin/bash" >> ${SONATYPE_DIR}/start-nexus-repository-manager.sh \
    && echo "cd /opt/sonatype/nexus" >> ${SONATYPE_DIR}/start-nexus-repository-manager.sh \
    && echo "exec ./bin/nexus run" >> ${SONATYPE_DIR}/start-nexus-repository-manager.sh \

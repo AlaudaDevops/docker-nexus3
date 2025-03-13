@@ -6,22 +6,11 @@ metadata:
     pipelinesascode.tekton.dev/on-comment: "^((/test-all)|(/build-test-image)|(/test-multi.*\ build-test-image.*))$"
     pipelinesascode.tekton.dev/max-keep-runs: "5"
     pipelinesascode.tekton.dev/on-cel-expression: |-
-      (
+      ((
         ".tekton/pipelinerun.yaml".pathChanged() ||
         "Dockerfile.alpine.java17".pathChanged()
       ) && (
-        !"Dockerfile.alpine.java17".pathChanged() || source_branch.matches("^(main|master|alauda-.*)$")
-      ) &&
-      ((
-        event == "push" && (
-          source_branch.matches("^(main|master|alauda-.*)$") ||
-          target_branch.matches("^(main|master|alauda-.*)$") ||
-          target_branch.startsWith("refs/tags/")
-        )
-      ) || (
-        event == "pull_request" && (
-          target_branch.matches("^(main|master|alauda-.*)$")
-        )
+        target_branch.matches("^(main|master|alauda-.*)$")
       ))
 spec:
   pipelineRef:
