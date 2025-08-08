@@ -41,9 +41,8 @@ spec:
     - name: dockerfile-path
       value: Dockerfile.alpine.java17
 
-    - name: tags
-      value:
-        - 3.81.1
+    - name: tag-prefix
+      value: "3.81.1-"
 
     - name: context
       value: "."
