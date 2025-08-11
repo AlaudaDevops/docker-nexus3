@@ -41,9 +41,8 @@ spec:
     - name: dockerfile-path
       value: Dockerfile.alpine.java17
 
-    - name: tags
-      value:
-        - 3.81.1
+    - name: tag-prefix
+      value: "3.81.1-"
 
     - name: context
       value: "."
@@ -55,6 +54,7 @@ spec:
       value:
         - .tekton/pipelinerun.yaml
         - Dockerfile.alpine.java17
+        - scripts/replace-vuln-jar.sh
   workspaces:
     - name: source
       volumeClaimTemplate:
