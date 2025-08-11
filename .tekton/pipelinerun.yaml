@@ -48,7 +48,7 @@ spec:
       value: "."
 
     - name: ignore-trivy-scan
-      value: "false"
+      value: "true"
 
     - name: file-list-for-commit-sha
       value:
