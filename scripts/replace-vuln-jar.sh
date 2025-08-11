@@ -250,10 +250,8 @@ done
 log "Repackaging JAR file..."
 mv $ORIGINAL_JAR "$ORIGINAL_JAR.bak"
 cd "$EXECUTION_DIR"
-set -x
 echo $filelist_path
 zip -r -0 "$ORIGINAL_JAR" -@ < "$EXECUTION_DIR/filelist.txt"
-set +x
 
 log "JAR dependency replacement completed successfully!"
 log "Original JAR: $ORIGINAL_JAR"
